@@ -1,22 +1,13 @@
 [
     {
-        "nome": "Ana Silva",
-        "email": "ana.silva@exemplo.com",
+        "nome": "Juan",
+        "email": "juan@email.com",
         "pontos": 0,
         "historico": []
     },
     {
-        "nome": "Juan Marques",
-        "email": "juanmarques@gmail.com",
-        "pontos": 0,
-        "historico": [
-            "2x foto (+10 pts)",
-            "Conversão de 10 pontos (R$ 0.09 estimados)"
-        ]
-    },
-    {
-        "nome": "Juan Marques",
-        "email": "juanmarques@email.com",
+        "nome": "Lucas",
+        "email": "lucas@email.com",
         "pontos": 0,
         "historico": []
     }
