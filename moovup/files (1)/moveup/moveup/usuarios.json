@@ -1,0 +1,13 @@
+[
+    {
+        "nome": "Maria Teste",
+        "email": "maria@teste.com",
+        "pontos": 0,
+        "historico": [
+            "3x foto: +15 pontos",
+            "Conversao: -15 pontos = R$ 0.14",
+            "3x story: +9 pontos",
+            "Conversao: -9 pontos = R$ 0.08"
+        ]
+    }
+]

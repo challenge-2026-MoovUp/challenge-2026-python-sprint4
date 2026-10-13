@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MoovUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0b14;--surface:#16111e;--line:#2a2234;--text:#ece3ee;--muted:#9a8fa6;--purple:#b283c7;--copper:#c8805f;--ok:#7fb89a;
+--serif:"Cormorant Garamond",Georgia,serif;--sans:"Jost",system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(900px 500px at 0% 0%,#2a2038 0%,transparent 60%),var(--bg);color:var(--text);font:300 16px/1.55 var(--sans);min-height:100vh}
+h1,h2{font-family:var(--serif);font-weight:400;margin:0;line-height:1.1}
+em{color:var(--purple);font-style:italic}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px clamp(16px,4vw,40px);border-bottom:1px solid var(--line)}
+.brand{font:400 17px var(--serif);display:flex;gap:10px;align-items:center}
+.logo{width:28px;height:28px;border-radius:8px;background:#241a33;display:grid;place-items:center;font:italic 15px var(--serif);color:var(--purple)}
+nav{display:flex;gap:6px;align-items:center}
+nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--text);font:400 14px var(--sans);padding:7px 14px;cursor:pointer}
+nav button[aria-current=true]{border-bottom-color:var(--purple)}
+nav .pill{border:1px solid var(--line);border-radius:99px}
+main{max-width:1000px;margin:0 auto;padding:clamp(24px,6vw,64px) clamp(16px,4vw,40px)}
+.hidden{display:none!important}
+.tag{display:inline-block;font:italic 13px var(--sans);color:var(--copper);background:#2a1d1d;border:1px solid #3a2a28;border-radius:99px;padding:3px 12px;margin-bottom:16px}
+.auth{max-width:420px;margin:6vh auto 0;text-align:center}
+.auth h1{font-size:clamp(34px,6vw,50px);margin-bottom:10px}
+.auth>p{color:var(--muted);margin:0 0 24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px}
+.tabs{display:flex;gap:6px;margin-bottom:8px;justify-content:center}
+.tabs button{background:none;border:1px solid var(--line);color:var(--muted);padding:6px 16px;border-radius:99px;cursor:pointer;font:400 14px var(--sans)}
+.tabs button[aria-selected=true]{color:var(--text);border-color:var(--purple)}
+label{display:block;text-align:left;font-size:13px;color:var(--muted);margin:14px 0 5px}
+input,select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font:300 15px var(--sans)}
+input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
+.btn{width:100%;margin-top:20px;background:#241a33;color:var(--text);border:1px solid var(--purple);border-radius:99px;padding:11px;font:500 14px var(--sans);cursor:pointer}
+.btn:hover{background:#2f2342}
+.btn.danger{border-color:#8a4a4a;background:none;color:#e0a0a0;margin-top:10px}
+.msg{min-height:22px;margin-top:14px;font-size:14px;color:var(--copper)}
+.msg.ok{color:var(--ok)}
+.hero{display:flex;flex-wrap:wrap;gap:24px;align-items:end;justify-content:space-between;margin-bottom:32px}
+.hero h1{font-size:clamp(34px,6vw,54px)}
+.saldo{text-align:right}
+.saldo b{display:block;font:italic 400 clamp(48px,9vw,76px)/1 var(--serif);color:var(--purple)}
+.saldo span{color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card h2{font-size:28px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.calc{margin-top:14px;font-size:14px;color:var(--muted)}
+.calc b{color:var(--text);font-weight:500}
+.hist{margin-top:16px}
+.hist ul{list-style:none;margin:12px 0 0;padding:0}
+.hist li{padding:11px 0;border-top:1px solid var(--line);font-size:14px}
+.pos{color:var(--ok)}.neg{color:var(--copper)}
+.empty{color:var(--muted);font-size:14px;margin-top:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.saldo{text-align:left}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo">mu</span>MoovUp</div>
+  <nav id="nav" class="hidden">
+    <button data-view="pontos" aria-current="true">Pontos</button>
+    <button data-view="conta">Minha conta</button>
+    <button class="pill" id="sair">Sair</button>
+  </nav>
+</header>
+
+<main>
+  <!-- LOGIN / CADASTRO (create + identificação por e-mail) -->
+  <section id="auth" class="auth">
+    <span class="tag">Bem-vindo</span>
+    <h1>Entre e continue <em>acumulando</em></h1>
+    <p>Poste, ganhe pontos e converta em valor real.</p>
+    <form class="card" id="form-auth" novalidate>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" data-modo="login" aria-selected="true">Entrar</button>
+        <button type="button" role="tab" data-modo="cadastro" aria-selected="false">Criar conta</button>
+      </div>
+      <div id="campo-nome" class="hidden"><label for="nome">Nome</label><input id="nome" autocomplete="name"></div>
+      <label for="email">E-mail</label><input id="email" type="email" autocomplete="email">
+      <button class="btn" id="btn-auth">Entrar</button>
+      <div class="msg" id="msg-auth" role="status"></div>
+    </form>
+  </section>
+
+  <!-- PAINEL: SALDO, POSTAGENS, CONVERSÃO, HISTÓRICO (read) -->
+  <section id="pontos" class="hidden">
+    <div class="hero">
+      <div><span class="tag">Seu painel</span><h1>Olá, <em id="ola"></em></h1></div>
+      <div class="saldo"><b id="saldo">0</b><span id="saldo-reais"></span></div>
+    </div>
+    <div class="grid">
+      <form class="card" id="form-post">
+        <h2>Ganhar pontos</h2>
+        <p class="sub">Registre suas postagens para somar pontos.</p>
+        <label for="tipo">Tipo de postagem</label><select id="tipo"></select>
+        <label for="qtd-post">Quantidade (1 a 5)</label>
+        <select id="qtd-post"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+        <div class="calc" id="calc-post"></div>
+        <button class="btn">Registrar postagem</button>
+        <div class="msg" id="msg-post" role="status"></div>
+      </form>
+      <form class="card" id="form-conv">
+        <h2>Converter pontos</h2>
+        <p class="sub" id="taxa"></p>
+        <label for="pontos-conv">Pontos a converter</label><input id="pontos-conv" type="number" min="1" inputmode="numeric">
+        <div class="calc" id="calc-conv"></div>
+        <button class="btn">Converter pontos</button>
+        <div class="msg" id="msg-conv" role="status"></div>
+      </form>
+    </div>
+    <div class="card hist">
+      <h2>Histórico</h2>
+      <ul id="hist"></ul>
+      <div class="empty hidden" id="hist-vazio">Nenhuma movimentação ainda. Registre sua primeira postagem.</div>
+    </div>
+  </section>
+
+  <!-- MINHA CONTA (update + delete) -->
+  <section id="conta" class="hidden auth">
+    <h1>Minha <em>conta</em></h1>
+    <p>Atualize seus dados ou exclua o cadastro.</p>
+    <form class="card" id="form-conta" novalidate>
+      <label for="c-nome">Nome</label><input id="c-nome">
+      <label for="c-email">E-mail</label><input id="c-email" type="email">
+      <button class="btn">Salvar alterações</button>
+      <button class="btn danger" type="button" id="excluir">Excluir conta</button>
+      <div class="msg" id="msg-conta" role="status"></div>
+    </form>
+  </section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const ROTULOS = {foto: "Foto", video: "Vídeo", story: "Story", reels: "Reels"};
+let user = null, cfg = {valor_ponto: 0, postagens: []}, modo = "login";
+
+const brl = (n, casas = 2) => n.toLocaleString("pt-BR", {style: "currency", currency: "BRL", minimumFractionDigits: casas, maximumFractionDigits: casas});
+const say = (el, texto, ok) => { el.textContent = texto; el.className = "msg" + (ok ? " ok" : ""); };
+
+async function api(url, method = "GET", body) {
+  const r = await fetch(url, {method, headers: {"Content-Type": "application/json"}, body: body ? JSON.stringify(body) : undefined});
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.erro || "Não foi possível concluir a ação.");
+  return d;
+}
+function lembrar(id) { try { id ? sessionStorage.setItem("moveup_id", id) : sessionStorage.removeItem("moveup_id"); } catch (e) {} }
+
+function show(view) {
+  ["auth", "pontos", "conta"].forEach(v => $("#" + v).classList.toggle("hidden", v !== view));
+  $("#nav").classList.toggle("hidden", view === "auth");
+  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-current", b.dataset.view === view));
+}
+
+/* ---------- Entrar / criar conta ---------- */
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  modo = b.dataset.modo;
+  document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  $("#campo-nome").classList.toggle("hidden", modo === "login");
+  $("#btn-auth").textContent = modo === "login" ? "Entrar" : "Criar conta";
+  say($("#msg-auth"), "");
+});
+$("#form-auth").onsubmit = async e => {
+  e.preventDefault();
+  try {
+    const email = $("#email").value.trim();
+    user = modo === "login" ? await api("/api/login", "POST", {email})
+                            : await api("/api/usuarios", "POST", {nome: $("#nome").value.trim(), email});
+    await abrirPainel();
+  } catch (err) { say($("#msg-auth"), err.message); }
+};
+async function abrirPainel() {
+  lembrar(user.id);
+  cfg = await api("/api/config");
+  $("#tipo").innerHTML = cfg.postagens.map(p => `<option value="${p.id}">${ROTULOS[p.id] || p.id} (+${p.pontos} pts cada)</option>`).join("");
+  $("#taxa").textContent = `Cada ponto vale ${brl(cfg.valor_ponto, 4)}.`;
+  desenhar(); await carregarHistorico(); show("pontos");
+}
+function sair() { user = null; lembrar(null); $("#form-auth").reset(); show("auth"); }
+$("#sair").onclick = sair;
+
+/* ---------- Painel ---------- */
+function desenhar() {
+  $("#ola").textContent = user.nome.split(" ")[0];
+  $("#saldo").textContent = user.pontos;
+  $("#saldo-reais").textContent = `pontos · cerca de ${brl(user.pontos * cfg.valor_ponto)}`;
+  $("#c-nome").value = user.nome; $("#c-email").value = user.email;
+  $("#pontos-conv").max = user.pontos;
+  calcPost(); calcConv();
+}
+function calcPost() {
+  const p = cfg.postagens.find(x => x.id === $("#tipo").value);
+  $("#calc-post").innerHTML = p ? `Você ganha <b>${p.pontos * $("#qtd-post").value} pontos</b>` : "";
+}
+function calcConv() {
+  const n = parseInt($("#pontos-conv").value);
+  $("#calc-conv").innerHTML = n > 0 ? `Valor estimado: <b>${brl(n * cfg.valor_ponto)}</b>` : "";
+}
+$("#tipo").onchange = $("#qtd-post").onchange = calcPost;
+$("#pontos-conv").oninput = calcConv;
+
+async function carregarHistorico() {
+  const h = (await api(`/api/usuarios/${user.id}/historico`)).reverse();
+  $("#hist-vazio").classList.toggle("hidden", h.length > 0);
+  const ul = $("#hist"); ul.replaceChildren();
+  h.forEach(texto => {
+    const li = document.createElement("li");
+    li.textContent = texto;
+    li.className = texto.startsWith("Convers") ? "neg" : "pos";
+    ul.append(li);
+  });
+}
+$("#form-post").onsubmit = async e => {
+  e.preventDefault();
+  try {
+    user = await api(`/api/usuarios/${user.id}/postagem`, "POST", {tipo: $("#tipo").value, quantidade: $("#qtd-post").value});
+    desenhar(); await carregarHistorico(); say($("#msg-post"), "Pontos adicionados.", true);
+  } catch (err) { say($("#msg-post"), err.message); }
+};
+$("#form-conv").onsubmit = async e => {
+  e.preventDefault();
+  try {
+    const usados = $("#pontos-conv").value;
+    const r = await api(`/api/usuarios/${user.id}/converter`, "POST", {pontos: usados});
+    user = r.usuario; $("#pontos-conv").value = "";
+    desenhar(); await carregarHistorico();
+    say($("#msg-conv"), `${usados} pontos convertidos em ${brl(r.valor)}.`, true);
+  } catch (err) { say($("#msg-conv"), err.message); }
+};
+
+/* ---------- Minha conta ---------- */
+document.querySelectorAll("#nav [data-view]").forEach(b => b.onclick = () => show(b.dataset.view));
+$("#form-conta").onsubmit = async e => {
+  e.preventDefault();
+  try {
+    user = await api(`/api/usuarios/${user.id}`, "PUT", {nome: $("#c-nome").value.trim(), email: $("#c-email").value.trim()});
+    desenhar(); say($("#msg-conta"), "Dados salvos.", true);
+  } catch (err) { say($("#msg-conta"), err.message); }
+};
+$("#excluir").onclick = async () => {
+  if (!confirm("Excluir sua conta e todo o histórico? Essa ação não pode ser desfeita.")) return;
+  try { await api(`/api/usuarios/${user.id}`, "DELETE"); sair(); }
+  catch (err) { say($("#msg-conta"), err.message); }
+};
+
+/* ---------- Ao abrir a página: retoma a sessão, se houver ---------- */
+(async () => {
+  try {
+    const id = sessionStorage.getItem("moveup_id");
+    if (id) { user = await api(`/api/usuarios/${id}`); await abrirPainel(); }
+  } catch (e) { lembrar(null); }
+})();
+</script>
+</body>
+</html>
