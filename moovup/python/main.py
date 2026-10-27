@@ -144,6 +144,8 @@ def menu(conexao):
             executar(acoes[opcao], conexao)
         elif opcao == "5":
             exibir_json()
+        elif opcao == "6":
+            servico.exportar_json()
         elif opcao == "0":
             print("Saindo...")
             break

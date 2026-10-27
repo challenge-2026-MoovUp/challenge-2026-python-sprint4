@@ -7,6 +7,7 @@ from flask import Flask, g, jsonify, request, send_from_directory
 import db
 import servico
 
+"""Pathlib para facilitar a criacao do arquivo static"""
 RAIZ_PROJETO = Path(__file__).resolve().parent.parent
 app = Flask(__name__, static_folder=RAIZ_PROJETO / "static")
 
