@@ -150,7 +150,7 @@ def converter_pontos(conexao, id_usuario, pontos):
     with conexao.cursor() as cursor:
         cursor.execute(
             "UPDATE usuario SET pontos = pontos - :1 WHERE id_usuario = :2 AND pontos >= :3",
-            (usar, id_usuario),
+            (usar, id_usuario, usar),
         )
         if cursor.rowcount == 0:
             raise ValueError("Saldo insuficiente.")

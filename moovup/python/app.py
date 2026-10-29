@@ -11,9 +11,8 @@ import servico
 RAIZ_PROJETO = Path(__file__).resolve().parent.parent
 app = Flask(__name__, static_folder=RAIZ_PROJETO / "static")
 
-
+#Faz um requisicao de conexao ao database, se houver ele retorna a conexao se n houver ele faz uma 
 def conexao():
-    """Uma conexão do pool por requisição (fechada em fechar_conexao)."""
     if "conexao" not in g:
         g.conexao = db.obter_conexao()
     return g.conexao
