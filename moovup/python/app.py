@@ -6,6 +6,7 @@ from flask import Flask, g, jsonify, request, send_from_directory
 
 import db
 import servico
+import cep
 
 """Pathlib para facilitar a criacao do arquivo static"""
 RAIZ_PROJETO = Path(__file__).resolve().parent.parent
@@ -17,6 +18,9 @@ def conexao():
         g.conexao = db.obter_conexao()
     return g.conexao
 
+@app.get("/api/ceep/<string:codigo>")
+def consultar_cep(codigo):
+    return jsonify(cep.buscar_endereco(codigo))
 
 @app.teardown_appcontext
 def fechar_conexao(_erro):

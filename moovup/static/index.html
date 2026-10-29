@@ -82,6 +82,10 @@ input:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid 
       </div>
       <div id="campo-nome" class="hidden"><label for="nome">Nome</label><input id="nome" autocomplete="name"></div>
       <label for="email">E-mail</label><input id="email" type="email" autocomplete="email">
+      <div id="campo-cep" class="hidden">
+        <label for="cep">CEP</label><input id="cep" inputmode="numeric" autocomplete="postal-code" maxlength="9" placeholder="00000-000">
+        <div class="calc hidden" id="endereco-cep" aria-live="polite"></div>
+      </div>
       <button class="btn" id="btn-auth">Entrar</button>
       <div class="msg" id="msg-auth" role="status"></div>
     </form>
@@ -161,9 +165,38 @@ document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
   modo = b.dataset.modo;
   document.querySelectorAll(".tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
   $("#campo-nome").classList.toggle("hidden", modo === "login");
+  $("#campo-cep").classList.toggle("hidden", modo === "login");
   $("#btn-auth").textContent = modo === "login" ? "Entrar" : "Criar conta";
   say($("#msg-auth"), "");
 });
+$("#cep").oninput = () => {
+  const digitos = $("#cep").value.replace(/\D/g, "").slice(0, 8);
+  $("#cep").value = digitos.length > 5 ? `${digitos.slice(0, 5)}-${digitos.slice(5)}` : digitos;
+  $("#endereco-cep").classList.add("hidden");
+};
+$("#cep").onblur = async () => {
+  const cep = $("#cep").value.replace(/\D/g, "");
+  if (!cep) return;
+  if (cep.length !== 8) {
+    say($("#msg-auth"), "CEP deve possuir 8 dígitos.");
+    return;
+  }
+  try {
+    const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    if (!resposta.ok) throw new Error();
+    const endereco = await resposta.json();
+    if (endereco.erro) throw new Error("CEP não encontrado.");
+    const texto = [endereco.logradouro, endereco.bairro, endereco.localidade, endereco.uf]
+      .filter(Boolean)
+      .join(" · ");
+    $("#endereco-cep").textContent = texto || "CEP encontrado.";
+    $("#endereco-cep").classList.remove("hidden");
+    say($("#msg-auth"), "");
+  } catch (erro) {
+    $("#endereco-cep").classList.add("hidden");
+    say($("#msg-auth"), erro.message || "Não foi possível consultar o CEP.");
+  }
+};
 $("#form-auth").onsubmit = async e => {
   e.preventDefault();
   try {
