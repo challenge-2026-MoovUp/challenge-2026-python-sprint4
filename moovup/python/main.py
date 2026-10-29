@@ -136,7 +136,7 @@ def menu(conexao):
     while True:
         print("\n===== SOUL UP =====")
         print("1 - Usuarios\n2 - Registrar postagem\n3 - Converter pontos")
-        print("4 - Consultar saldo\n5 - Exibir JSON\n0 - Sair")
+        print("4 - Consultar saldo\n5 - Exibir JSON\n6 - Exportar JSON\n0 - Sair")
         opcao = input("Opcao: ")
         if opcao == "1":
             menu_usuarios(conexao)
@@ -145,7 +145,8 @@ def menu(conexao):
         elif opcao == "5":
             exibir_json()
         elif opcao == "6":
-            servico.exportar_json()
+            servico.exportar_json(conexao)
+            print("Dados exportados para usuarios.json.")
         elif opcao == "0":
             print("Saindo...")
             break
