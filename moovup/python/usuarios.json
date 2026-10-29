@@ -9,5 +9,15 @@
             "3x story: +9 pontos",
             "Conversao: -9 pontos = R$ 0.08"
         ]
+    },
+    {
+        "nome": "Juan Souza Marques",
+        "email": "juanmarques@email.com",
+        "pontos": 140,
+        "historico": [
+            "2x foto: +10 pontos",
+            "5x reels: +100 pontos",
+            "2x video: +30 pontos"
+        ]
     }
 ]
